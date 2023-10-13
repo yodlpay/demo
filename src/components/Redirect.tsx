@@ -2,7 +2,7 @@ import { Flex, Text, createStyles, rem } from "@mantine/core";
 import { useLocation } from "react-router-dom";
 import { MOBILE_BREAKPOINT } from "../styles/theme";
 import { useLookup } from "../hooks/yodl";
-import { memoToString } from "../helpers/transaction";
+import { hexToString } from "viem";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -81,8 +81,18 @@ export default function Redirect() {
           <Text c="primary.0" weight={400} size={16} align="left">
             Invoice ID
           </Text>
-          <Text c="positive.0" weight={600} size={16} align="right">
-            {memoToString(txDetails?.memo ?? "0x")}
+          <Text
+            c="positive.0"
+            weight={600}
+            size={16}
+            align="right"
+            style={{
+              whiteSpace: "normal",
+              overflowWrap: "break-word",
+              maxWidth: "50%",
+            }}
+          >
+            {hexToString((txDetails?.memo as `0x${string}`) ?? "0x0")}
           </Text>
         </Flex>
       </Flex>
