@@ -7,6 +7,7 @@ import {
   Button,
   Flex,
   NativeSelect,
+  NumberInput,
   Text,
   TextInput,
   Tooltip,
@@ -14,12 +15,11 @@ import {
   rem,
 } from "@mantine/core";
 import { useMemo } from "react";
-import { FormProvider, useForm } from "react-hook-form";
+import { Controller, FormProvider, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { DEMO_CURRENCIES } from "../constants";
 import { MOBILE_BREAKPOINT, theme } from "../styles/theme";
 import { demoTopupSchema } from "../validation";
-import { Controller } from "react-hook-form";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -142,13 +142,25 @@ export default function Home() {
                 name="amount"
                 control={methods.control}
                 render={({ field }) => (
-                  <TextInput
+                  <NumberInput
                     {...field}
                     className={classes.input}
+                    decimalSeparator="."
+                    thousandsSeparator=","
+                    parser={(value) => value.replace(/\$\s?|(,*)/g, "") as ""}
+                    formatter={(value) =>
+                      !Number.isNaN(parseFloat(value as string))
+                        ? `${value}`.replace(
+                            /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
+                            ","
+                          )
+                        : ""
+                    }
+                    precision={2}
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency,
+                        (item) => item.value === values.currency
                       )?.icon
                     }
                     error={error}
