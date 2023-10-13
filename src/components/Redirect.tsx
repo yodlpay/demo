@@ -37,24 +37,29 @@ export default function Redirect() {
     );
   }
 
+  let message, color;
   if (isLoading) {
-    return (
-      <Flex direction="column" className={classes.container} gap={16}>
-        <Flex direction="column" gap={16}>
-          <Text c="primary.0" weight={600} size={28} align="center">
-            Verifying payment...
-          </Text>
-        </Flex>
-      </Flex>
-    );
+    message = "Verifying payment...";
+    color = "primary.0";
+  } else if (error) {
+    message = "Failed to fetch top up details!";
+    color = "error.0";
+  } else if (
+    txDetails?.receiver.toLowerCase() !==
+      (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase() ||
+    txDetails?.tokenSymbol.toLowerCase() !==
+      (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase()
+  ) {
+    message = "Top up payment was invalid!";
+    color = "error.0";
   }
 
-  if (error) {
+  if (!!message) {
     return (
       <Flex direction="column" className={classes.container} gap={16}>
         <Flex direction="column" gap={16}>
-          <Text c="primary.0" weight={600} size={28} align="center">
-            Failed to top up!
+          <Text c={color} weight={600} size={28} align="center">
+            {message}
           </Text>
         </Flex>
       </Flex>
