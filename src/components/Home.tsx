@@ -104,14 +104,24 @@ export default function Home() {
 
   const values = watch();
 
-  const memo = useMemo(() => uuidv4(), []);
+  const memo = useMemo(() => uuidv4().replace(/-/g, ""), []);
 
   const error = formState.errors.amount?.message;
 
   const { classes } = useStyles();
 
   const onSubmit = (data: FormState) => {
-    console.log("Submitted Data:", data);
+    console.log(data);
+    const { amount, currency } = methods.getValues();
+    const baseUrl = `${process.env.REACT_APP_YODL_URL}/${process.env.REACT_APP_YODL_USERNAME}`;
+    const searchParams = new URLSearchParams({
+      memo,
+      amount: (amount * 100).toString(),
+      currency,
+    });
+    const url = `${baseUrl}?${searchParams.toString()}`;
+    console.log(url);
+    window.location.href = url;
   };
 
   return (
@@ -138,7 +148,7 @@ export default function Home() {
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency
+                        (item) => item.value === values.currency,
                       )?.icon
                     }
                     error={error}

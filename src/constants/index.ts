@@ -5,3 +5,6 @@ export const DEMO_CURRENCIES = [
   { value: "jpy", label: "🇯🇵 JPY", icon: "¥" },
   { value: "chf", label: "🇨🇭 CHF", icon: "₣" },
 ];
+
+export const MAX_FETCH_TX_ATTEMPTS = 3;
+export const TX_FETCH_INTERVAL = 2000; // milliseconds
