@@ -18,6 +18,11 @@ export const useLookup = (chainId: number | null, txHash: string | null) => {
           res = await fetch(
             `${process.env.REACT_APP_YODL_URL}/lookup/${chainId}/${txHash}`,
           );
+
+          if (res.ok) {
+            break;
+          }
+
           if (!res.ok && res.status !== 404) {
             const message = `Failed to lookup payment on chain ${chainId} with hash ${txHash} with status code ${res.status}`;
             console.error(message);
@@ -25,7 +30,6 @@ export const useLookup = (chainId: number | null, txHash: string | null) => {
             setIsLoading(false);
             return;
           }
-
           await sleep(TX_FETCH_INTERVAL);
         }
 
