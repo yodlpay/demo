@@ -1,5 +1,5 @@
 {
-  "name": "my-app",
+  "name": "yodl-demo",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -53,6 +53,7 @@
     ]
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.4.10",
     "@types/uuid": "^9.0.5"
   }
 }
