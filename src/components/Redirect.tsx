@@ -97,7 +97,7 @@ export default function Redirect() {
               maxWidth: "50%",
             }}
           >
-            {hexToString((txDetails?.memo as `0x${string}`) ?? "0x0")}
+            {txDetails?.memo ?? ""}
           </Text>
         </Flex>
       </Flex>
