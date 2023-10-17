@@ -57,6 +57,7 @@ export default function Redirect() {
       (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase() ||
     txDetails?.tokenSymbol.toLowerCase() !==
       (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase() ||
+    txDetails?.memo !== paymentDetails?.memo ||
     !isVerified
   ) {
     message = "Top up payment was invalid!";
