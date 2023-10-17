@@ -1,8 +1,8 @@
 import { Flex, Text, createStyles, rem } from "@mantine/core";
 import { useLocation } from "react-router-dom";
 import { MOBILE_BREAKPOINT } from "../styles/theme";
-import { useLookup } from "../hooks/yodl";
-import { hexToString } from "viem";
+import { useVerify } from "../hooks/yodl";
+import { useMemo } from "react";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -25,7 +25,15 @@ export default function Redirect() {
   const searchParams = new URLSearchParams(location.search);
   const chainId = parseInt(searchParams.get("chainId") ?? "", 10);
   const txHash = searchParams.get("txHash");
-  const { txDetails, isLoading, error } = useLookup(chainId, txHash);
+  const paymentDetails = useMemo(
+    () => JSON.parse(localStorage.getItem("payment") ?? ""),
+    [],
+  );
+  const { txDetails, isVerified, isLoading, error } = useVerify(
+    chainId,
+    txHash,
+    paymentDetails,
+  );
 
   if (!chainId || !txHash || isNaN(chainId)) {
     return (
@@ -48,7 +56,8 @@ export default function Redirect() {
     txDetails?.receiver.toLowerCase() !==
       (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase() ||
     txDetails?.tokenSymbol.toLowerCase() !==
-      (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase()
+      (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase() ||
+    !isVerified
   ) {
     message = "Top up payment was invalid!";
     color = "error.0";

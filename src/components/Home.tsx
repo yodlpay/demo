@@ -114,6 +114,14 @@ export default function Home() {
     console.log(data);
     const { amount, currency } = methods.getValues();
     const baseUrl = `${process.env.REACT_APP_YODL_URL}/${process.env.REACT_APP_YODL_USERNAME}`;
+    localStorage.setItem(
+      "payment",
+      JSON.stringify({
+        memo,
+        amount,
+        currency,
+      }),
+    );
     const searchParams = new URLSearchParams({
       memo,
       amount: (amount * 100).toString(),
@@ -152,7 +160,7 @@ export default function Home() {
                       !Number.isNaN(parseFloat(value as string))
                         ? `${value}`.replace(
                             /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                            ","
+                            ",",
                           )
                         : ""
                     }
@@ -160,7 +168,7 @@ export default function Home() {
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency
+                        (item) => item.value === values.currency,
                       )?.icon
                     }
                     error={error}

@@ -20,3 +20,14 @@ export type TxDetails = {
   conversion: string;
   priceFeeds: PriceFeed[];
 };
+
+export type VerifiedTxDetails = TxDetails & {
+  verified: boolean;
+  verificationErrors: string[];
+};
+
+export type PaymentDetails = {
+  memo: string;
+  amount: number;
+  currency: string;
+}

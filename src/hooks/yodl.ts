@@ -1,23 +1,41 @@
-import { TxDetails } from "../types";
+import { PaymentDetails, TxDetails, VerifiedTxDetails } from "../types";
 import { useEffect, useState } from "react";
 import { MAX_FETCH_TX_ATTEMPTS, TX_FETCH_INTERVAL } from "../constants";
 import { sleep } from "../helpers";
 
-export const useLookup = (chainId: number | null, txHash: string | null) => {
+export const useVerify = (
+  chainId: number | null,
+  txHash: string | null,
+  paymentDetails: PaymentDetails | null,
+) => {
   const [txDetails, setTxDetails] = useState<TxDetails | null>(null);
+  const [isVerified, setIsVerified] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
     const getTxDetails = async () => {
       try {
+        const payload = {
+          chainId,
+          txHash,
+          amount: paymentDetails?.amount,
+          currency: paymentDetails?.currency.toUpperCase(),
+          address: process.env.REACT_APP_YODL_ADDRESS ?? "",
+          handle: process.env.REACT_APP_YODL_USERNAME ?? "",
+        };
         let attempts = 0;
         let res;
         while (attempts < MAX_FETCH_TX_ATTEMPTS) {
           attempts += 1;
-          res = await fetch(
-            `${process.env.REACT_APP_YODL_URL}/lookup/${chainId}/${txHash}`,
-          );
+          res = await fetch(`${process.env.REACT_APP_YODL_URL}/api/verify`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application.json",
+              authorization: process.env.REACT_APP_YODL_API_KEY ?? "",
+            },
+            body: JSON.stringify(payload),
+          });
 
           if (res.ok) {
             break;
@@ -41,8 +59,11 @@ export const useLookup = (chainId: number | null, txHash: string | null) => {
           return;
         }
 
-        const txDetails = (await res.json()) as TxDetails[];
-        setTxDetails(txDetails[0]);
+        const verifiedTxDetails = (await res.json()) as VerifiedTxDetails[];
+        const { verified, verificationErrors, ...txDetails } =
+          verifiedTxDetails[0];
+        setIsVerified(verified);
+        setTxDetails(txDetails);
         setIsLoading(false);
       } catch (err) {
         console.error(err);
@@ -51,15 +72,17 @@ export const useLookup = (chainId: number | null, txHash: string | null) => {
       }
     };
 
-    if (!!chainId && !isNaN(chainId) && !!txHash) {
+    if (!!chainId && !isNaN(chainId) && !!txHash && !!paymentDetails) {
       setIsLoading(true);
+      setIsVerified(false);
       setError(null);
       getTxDetails();
     }
-  }, [chainId, txHash]);
+  }, [chainId, txHash, paymentDetails]);
 
   return {
     txDetails,
+    isVerified,
     isLoading,
     error,
   };
