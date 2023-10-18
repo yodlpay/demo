@@ -24,8 +24,8 @@ function constructUrl(chainId?: number, txHash?: string) {
 
 function truncateUrl(
   url: string,
-  startLength: number = 10,
-  endLength: number = 10,
+  startLength: number = 9,
+  endLength: number = 9,
   delimiter: string = "..."
 ): string {
   if (url.length <= startLength + endLength) {
@@ -54,6 +54,13 @@ const useStyles = createStyles((theme) => ({
   icon: {
     width: "26px",
     color: theme.colors?.error?.[0],
+  },
+  label: {
+    flex: 2,
+  },
+  details: {
+    flex: 2,
+    wordBreak: "break-all",
   },
 }));
 
@@ -125,24 +132,53 @@ export default function Redirect() {
       </Flex>
       <Flex direction="column" mt={32} gap={16}>
         <Flex direction="row" gap={8} justify="space-between">
-          <Text c="primary.0" weight={400} size={16} align="left">
+          <Text
+            c="primary.0"
+            weight={400}
+            size={16}
+            align="left"
+            className={classes.label}
+          >
             Top up amount
           </Text>
-          <Text weight={600} size={16} align="right">
+          <Text
+            weight={600}
+            size={16}
+            align="right"
+            className={classes.details}
+          >
             {txDetails?.invoiceAmount} {txDetails?.invoiceCurrency}
           </Text>
         </Flex>
         <Flex direction="row" gap={8} justify="space-between">
-          <Text c="primary.0" weight={400} size={16} align="left">
+          <Text
+            c="primary.0"
+            weight={400}
+            size={16}
+            align="left"
+            className={classes.label}
+          >
             Status
           </Text>
-          <Text c="positive.0" weight={600} size={16} align="right">
+          <Text
+            c="positive.0"
+            weight={600}
+            size={16}
+            align="right"
+            className={classes.details}
+          >
             Verified
           </Text>
         </Flex>
         {txUrl && (
           <Flex direction="row" gap={8} justify="space-between">
-            <Text c="primary.0" weight={400} size={16} align="left">
+            <Text
+              c="primary.0"
+              weight={400}
+              size={16}
+              align="left"
+              className={classes.label}
+            >
               Transaction
             </Text>
             <Text
@@ -152,6 +188,7 @@ export default function Redirect() {
               weight={600}
               size={16}
               align="right"
+              className={classes.details}
             >
               {truncateUrl(txUrl)}
             </Text>
@@ -159,18 +196,20 @@ export default function Redirect() {
         )}
         {txDetails?.memo && (
           <Flex direction="row" gap={8} justify="space-between">
-            <Text c="primary.0" weight={400} size={16} align="left">
+            <Text
+              c="primary.0"
+              weight={400}
+              size={16}
+              align="left"
+              className={classes.label}
+            >
               Invoice ID
             </Text>
             <Text
               weight={600}
               size={16}
               align="right"
-              style={{
-                whiteSpace: "normal",
-                overflowWrap: "break-word",
-                maxWidth: "50%",
-              }}
+              className={classes.details}
             >
               {txDetails?.memo}
             </Text>
