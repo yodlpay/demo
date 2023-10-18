@@ -4,18 +4,10 @@ import { MOBILE_BREAKPOINT } from "../styles/theme";
 const useStyles = createStyles((theme) => ({
   notFound: {
     padding: rem(32),
-    maxWidth: rem(500),
-    maxHeight: rem(500),
     width: "100%",
     height: "100%",
     margin: "auto",
-    background: theme.colors?.level?.[0],
     border: `1px solid ${theme.colors?.level?.[2]}`,
-    borderRadius: theme.radius.xl,
-    [theme.fn.smallerThan(MOBILE_BREAKPOINT)]: {
-      maxWidth: rem(300),
-      maxHeight: rem(300),
-    },
   },
   heading: {
     fontSize: rem(88),

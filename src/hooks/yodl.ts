@@ -6,11 +6,11 @@ import { sleep } from "../helpers";
 export const useVerify = (
   chainId: number | null,
   txHash: string | null,
-  paymentDetails: PaymentDetails | null,
+  paymentDetails: PaymentDetails | null
 ) => {
   const [txDetails, setTxDetails] = useState<TxDetails | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {

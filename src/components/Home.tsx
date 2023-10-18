@@ -23,7 +23,7 @@ import { demoTopupSchema } from "../validation";
 
 const useStyles = createStyles((theme) => ({
   container: {
-    maxWidth: rem(388),
+    maxWidth: "388px",
     padding: rem(32),
     margin: "auto",
     background: theme.colors?.level?.[0],
@@ -31,7 +31,7 @@ const useStyles = createStyles((theme) => ({
     borderRadius: theme.radius.xl,
     [theme.fn.smallerThan(MOBILE_BREAKPOINT)]: {
       padding: "32px 16px",
-      maxWidth: rem(300),
+      maxWidth: "300px",
     },
   },
 
@@ -120,7 +120,7 @@ export default function Home() {
         memo,
         amount,
         currency,
-      }),
+      })
     );
     const searchParams = new URLSearchParams({
       memo,
@@ -160,7 +160,7 @@ export default function Home() {
                       !Number.isNaN(parseFloat(value as string))
                         ? `${value}`.replace(
                             /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                            ",",
+                            ","
                           )
                         : ""
                     }
@@ -168,7 +168,7 @@ export default function Home() {
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency,
+                        (item) => item.value === values.currency
                       )?.icon
                     }
                     error={error}
@@ -225,11 +225,7 @@ export default function Home() {
               color="brand.0"
               fullWidth
               leftIcon={
-                <CurrencyDollarIcon
-                  color={theme.colors?.primary?.[0]}
-                  width="24px"
-                  height="24px"
-                />
+                <CurrencyDollarIcon color="white" width="24px" height="24px" />
               }
               mt={12}
               className={classes.topUpButton}

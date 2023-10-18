@@ -58,20 +58,20 @@ export const MINIMAL_SIZE_OPTIONS = ["sm", "md", "lg"];
 
 export const THEME_COLORS: Color = {
   brand: [DEFAULT_THEME.colors.indigo[9]],
-  base: [DEFAULT_THEME.colors.dark[8]],
+  base: ["#FFFFFF"],
   level: [
-    DEFAULT_THEME.colors.dark[7],
-    DEFAULT_THEME.colors.dark[6],
-    DEFAULT_THEME.colors.dark[4],
+    DEFAULT_THEME.colors.gray[0],
+    DEFAULT_THEME.colors.gray[1],
+    DEFAULT_THEME.colors.gray[3],
   ],
   modalOverlay: [CUSTOM_COLORS.modayOverlay],
   positiveBase: [CUSTOM_COLORS.positiveBase],
-  primary: [DEFAULT_THEME.colors.gray[0]],
+  primary: [DEFAULT_THEME.colors.gray[9]],
   subtle: [DEFAULT_THEME.colors.gray[6]],
   onColor: ["#FFFFFF"],
-  disabled: [DEFAULT_THEME.colors.gray[7]],
-  error: [DEFAULT_THEME.colors.red[6]],
-  positive: [CUSTOM_COLORS.positiveDark],
+  disabled: [DEFAULT_THEME.colors.gray[5]],
+  error: [DEFAULT_THEME.colors.red[7]],
+  positive: [CUSTOM_COLORS.positiveLight],
 };
 
 export const MOBILE_HEADING_SIZES = {
@@ -84,7 +84,7 @@ export const MOBILE_HEADING_SIZES = {
 };
 
 export const theme: MantineThemeOverride = {
-  colorScheme: "dark",
+  colorScheme: "light",
   colors: {
     ...DEFAULT_THEME.colors,
     ...THEME_COLORS,
