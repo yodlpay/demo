@@ -14,7 +14,6 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
-import { useMemo } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
 import { DEMO_CURRENCIES } from "../constants";
@@ -88,6 +87,7 @@ const useStyles = createStyles((theme) => ({
 type FormState = {
   amount: number;
   currency: string;
+  memo: string;
 };
 
 export default function Home() {
@@ -96,6 +96,7 @@ export default function Home() {
     defaultValues: {
       amount: 1,
       currency: "eur",
+      memo: uuidv4().replace(/-/g, ""),
     } as FormState,
     resolver: zodResolver(demoTopupSchema),
   });
@@ -104,15 +105,13 @@ export default function Home() {
 
   const values = watch();
 
-  const memo = useMemo(() => uuidv4().replace(/-/g, ""), []);
-
   const error = formState.errors.amount?.message;
 
   const { classes } = useStyles();
 
   const onSubmit = (data: FormState) => {
     console.log(data);
-    const { amount, currency } = methods.getValues();
+    const { amount, currency, memo } = methods.getValues();
     const baseUrl = `${process.env.REACT_APP_YODL_URL}/${process.env.REACT_APP_YODL_USERNAME}`;
     localStorage.setItem(
       "payment",
@@ -197,8 +196,11 @@ export default function Home() {
                   />
                 )}
               />
-
-              <TextInput label="Memo" value={memo} disabled />
+              <Controller
+                name="memo"
+                control={methods.control}
+                render={({ field }) => <TextInput {...field} label="Memo" />}
+              />
             </Flex>
             <Tooltip label="Boring... Why not try YODL?">
               <Button
