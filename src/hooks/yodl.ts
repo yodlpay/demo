@@ -1,4 +1,4 @@
-import { PaymentDetails, TxDetails, VerifiedTxDetails } from "../types";
+import { PaymentDetails, TxDetails, VerifyResponse } from "../types";
 import { useEffect, useState } from "react";
 import { MAX_FETCH_TX_ATTEMPTS, TX_FETCH_INTERVAL } from "../constants";
 import { sleep } from "../helpers";
@@ -59,9 +59,9 @@ export const useVerify = (
           return;
         }
 
-        const verifiedTxDetails = (await res.json()) as VerifiedTxDetails[];
+        const verifyResponse = (await res.json()) as VerifyResponse;
         const { verified, verificationErrors, ...txDetails } =
-          verifiedTxDetails[0];
+          verifyResponse.payments[0];
         setIsVerified(verified);
         setTxDetails(txDetails);
         setIsLoading(false);

@@ -26,6 +26,12 @@ export type VerifiedTxDetails = TxDetails & {
   verificationErrors: string[];
 };
 
+export type VerifyResponse = {
+  chainId: number;
+  txHash: string;
+  payments: VerifiedTxDetails[];
+};
+
 export type PaymentDetails = {
   memo: string;
   amount: number;
