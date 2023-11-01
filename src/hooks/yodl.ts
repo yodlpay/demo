@@ -6,7 +6,7 @@ import { sleep } from "../helpers";
 export const useVerify = (
   chainId: number | null,
   txHash: string | null,
-  paymentDetails: PaymentDetails | null
+  paymentDetails: PaymentDetails | null,
 ) => {
   const [txDetails, setTxDetails] = useState<TxDetails | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);
@@ -28,7 +28,7 @@ export const useVerify = (
         let res;
         while (attempts < MAX_FETCH_TX_ATTEMPTS) {
           attempts += 1;
-          res = await fetch(`${process.env.REACT_APP_YODL_URL}/api/verify`, {
+          res = await fetch(`${process.env.REACT_APP_YODL_URL}/api/v1/verify`, {
             method: "POST",
             headers: {
               "Content-Type": "application.json",
