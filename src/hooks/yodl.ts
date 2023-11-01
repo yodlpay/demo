@@ -1,9 +1,4 @@
-import {
-  PaymentDetails,
-  TxDetails,
-  VerifiedTxDetails,
-  VerifyResponse,
-} from "../types";
+import { PaymentDetails, TxDetails, VerifyResponse } from "../types";
 import { useEffect, useState } from "react";
 import { MAX_FETCH_TX_ATTEMPTS, TX_FETCH_INTERVAL } from "../constants";
 import { sleep } from "../helpers";
