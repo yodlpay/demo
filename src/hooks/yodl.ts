@@ -28,7 +28,7 @@ export const useVerify = (
         let res;
         while (attempts < MAX_FETCH_TX_ATTEMPTS) {
           attempts += 1;
-          res = await fetch(`${process.env.REACT_APP_YODL_URL}/v1/api/verify`, {
+          res = await fetch(`${process.env.REACT_APP_YODL_URL}/api/v1/verify`, {
             method: "POST",
             headers: {
               "Content-Type": "application.json",
