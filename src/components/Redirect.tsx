@@ -1,10 +1,12 @@
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Flex, Loader, Text, createStyles, rem } from "@mantine/core";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import * as chains from "viem/chains";
+import { LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { useVerify } from "../hooks/yodl";
 import { MOBILE_BREAKPOINT } from "../styles/theme";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import * as chains from "viem/chains";
+import { extractLocalStorageSettings } from "../helpers";
 
 function getChain(chainId: number) {
   for (const chain of Object.values(chains)) {
@@ -71,9 +73,10 @@ export default function Redirect() {
   const chainId = parseInt(searchParams.get("chainId") ?? "", 10);
   const txHash = searchParams.get("txHash");
   const paymentDetails = useMemo(
-    () => JSON.parse(localStorage.getItem("payment") ?? ""),
+    () => JSON.parse(localStorage.getItem(LOCAL_STORAGE_PAYMENT_KEY) ?? ""),
     [],
   );
+  const { address, token } = extractLocalStorageSettings();
   const { txDetails, isVerified, isLoading, error } = useVerify(
     chainId,
     txHash,
@@ -84,11 +87,11 @@ export default function Redirect() {
 
   const isMalformed = !chainId || !txHash || isNaN(chainId);
 
-  // const isInvalidAddress = txDetails?.receiver.toLowerCase() !==
-  //     (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase();
+  const isInvalidAddress =
+    txDetails?.receiver.toLowerCase() !== address.toLowerCase();
   const isInvalid =
-    txDetails?.tokenSymbol.toLowerCase() !==
-      (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase() ||
+    isInvalidAddress ||
+    txDetails?.tokenSymbol.toLowerCase() !== token.toLowerCase() ||
     txDetails?.memo !== paymentDetails?.memo ||
     !isVerified;
 
