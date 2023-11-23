@@ -1,10 +1,11 @@
+import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
 import { Flex, Loader, Text, createStyles, rem } from "@mantine/core";
 import { useMemo } from "react";
 import { useLocation } from "react-router-dom";
+import * as chains from "viem/chains";
+import { LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { useVerify } from "../hooks/yodl";
 import { MOBILE_BREAKPOINT } from "../styles/theme";
-import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
-import * as chains from "viem/chains";
 
 function getChain(chainId: number) {
   for (const chain of Object.values(chains)) {
@@ -26,7 +27,7 @@ function truncateUrl(
   url: string,
   startLength: number = 9,
   endLength: number = 9,
-  delimiter: string = "...",
+  delimiter: string = "..."
 ): string {
   if (url.length <= startLength + endLength) {
     return url;
@@ -71,13 +72,13 @@ export default function Redirect() {
   const chainId = parseInt(searchParams.get("chainId") ?? "", 10);
   const txHash = searchParams.get("txHash");
   const paymentDetails = useMemo(
-    () => JSON.parse(localStorage.getItem("payment") ?? ""),
-    [],
+    () => JSON.parse(localStorage.getItem(LOCAL_STORAGE_PAYMENT_KEY) ?? ""),
+    []
   );
   const { txDetails, isVerified, isLoading, error } = useVerify(
     chainId,
     txHash,
-    paymentDetails,
+    paymentDetails
   );
 
   const txUrl = constructUrl(txDetails?.chainId, txDetails?.txHash);

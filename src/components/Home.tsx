@@ -14,11 +14,13 @@ import {
   createStyles,
   rem,
 } from "@mantine/core";
+import { useState } from "react";
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { v4 as uuidv4 } from "uuid";
-import { DEMO_CURRENCIES } from "../constants";
+import { DEMO_CURRENCIES, LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { MOBILE_BREAKPOINT, theme } from "../styles/theme";
 import { demoTopupSchema } from "../validation";
+import { Settings } from "./Settings";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -71,7 +73,6 @@ const useStyles = createStyles((theme) => ({
     cursor: "auto",
     opacity: 0.5,
     "&:hover": {
-      // TODO: Tailwind overrides, can be removed once Tailwind is removed
       background: "transparent !important",
     },
     "&:active": {
@@ -79,8 +80,13 @@ const useStyles = createStyles((theme) => ({
     },
   },
   topUpButton: {
-    // TODO: Tailwind overrides, can be removed once Tailwind is removed
     background: `${theme.colors?.brand?.[0]} !important`,
+  },
+  settingsButton: {
+    color: theme.colors?.primary?.[0],
+    "&:hover": {
+      background: theme.colors?.level?.[1],
+    },
   },
 }));
 
@@ -91,6 +97,8 @@ type FormState = {
 };
 
 export default function Home() {
+  const [opened, setOpened] = useState(false);
+
   const methods = useForm<FormState>({
     reValidateMode: "onChange",
     defaultValues: {
@@ -114,7 +122,7 @@ export default function Home() {
     const { amount, currency, memo } = methods.getValues();
     const baseUrl = `${process.env.REACT_APP_YODL_URL}/${process.env.REACT_APP_YODL_USERNAME}`;
     localStorage.setItem(
-      "payment",
+      LOCAL_STORAGE_PAYMENT_KEY,
       JSON.stringify({
         memo,
         amount,
@@ -140,10 +148,17 @@ export default function Home() {
         <Text c="primary.0" size={16} align="center">
           Boost your balance in seconds
         </Text>
+        <Button
+          variant="subtle"
+          onClick={() => setOpened(true)}
+          className={classes.settingsButton}
+        >
+          Settings
+        </Button>
       </Flex>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Flex direction="column" mt={32}>
+          <Flex direction="column">
             <Flex direction="column" gap={8} mb={16}>
               <Controller
                 name="amount"
@@ -237,6 +252,7 @@ export default function Home() {
           </Flex>
         </form>
       </FormProvider>
+      <Settings opened={opened} handleClose={() => setOpened(false)} />
     </Flex>
   );
 }
