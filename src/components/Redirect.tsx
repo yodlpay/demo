@@ -26,7 +26,7 @@ function truncateUrl(
   url: string,
   startLength: number = 9,
   endLength: number = 9,
-  delimiter: string = "..."
+  delimiter: string = "...",
 ): string {
   if (url.length <= startLength + endLength) {
     return url;
@@ -72,21 +72,21 @@ export default function Redirect() {
   const txHash = searchParams.get("txHash");
   const paymentDetails = useMemo(
     () => JSON.parse(localStorage.getItem("payment") ?? ""),
-    []
+    [],
   );
   const { txDetails, isVerified, isLoading, error } = useVerify(
     chainId,
     txHash,
-    paymentDetails
+    paymentDetails,
   );
 
   const txUrl = constructUrl(txDetails?.chainId, txDetails?.txHash);
 
   const isMalformed = !chainId || !txHash || isNaN(chainId);
 
+  // const isInvalidAddress = txDetails?.receiver.toLowerCase() !==
+  //     (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase();
   const isInvalid =
-    txDetails?.receiver.toLowerCase() !==
-      (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase() ||
     txDetails?.tokenSymbol.toLowerCase() !==
       (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase() ||
     txDetails?.memo !== paymentDetails?.memo ||
