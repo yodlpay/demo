@@ -21,6 +21,7 @@ import { DEMO_CURRENCIES, LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { MOBILE_BREAKPOINT, theme } from "../styles/theme";
 import { demoTopupSchema } from "../validation";
 import { Settings } from "./Settings";
+import { extractLocalStorageSettings } from "../helpers";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -119,15 +120,16 @@ export default function Home() {
 
   const onSubmit = (data: FormState) => {
     console.log(data);
+    const { username } = extractLocalStorageSettings();
     const { amount, currency, memo } = methods.getValues();
-    const baseUrl = `${process.env.REACT_APP_YODL_URL}/${process.env.REACT_APP_YODL_USERNAME}`;
+    const baseUrl = `${process.env.REACT_APP_YODL_URL}/${username}`;
     localStorage.setItem(
       LOCAL_STORAGE_PAYMENT_KEY,
       JSON.stringify({
         memo,
         amount,
         currency,
-      })
+      }),
     );
     const searchParams = new URLSearchParams({
       memo,
@@ -174,7 +176,7 @@ export default function Home() {
                       !Number.isNaN(parseFloat(value as string))
                         ? `${value}`.replace(
                             /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                            ","
+                            ",",
                           )
                         : ""
                     }
@@ -182,7 +184,7 @@ export default function Home() {
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency
+                        (item) => item.value === values.currency,
                       )?.icon
                     }
                     error={error}

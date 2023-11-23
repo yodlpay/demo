@@ -6,6 +6,7 @@ import * as chains from "viem/chains";
 import { LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { useVerify } from "../hooks/yodl";
 import { MOBILE_BREAKPOINT } from "../styles/theme";
+import { extractLocalStorageSettings } from "../helpers";
 
 function getChain(chainId: number) {
   for (const chain of Object.values(chains)) {
@@ -27,7 +28,7 @@ function truncateUrl(
   url: string,
   startLength: number = 9,
   endLength: number = 9,
-  delimiter: string = "..."
+  delimiter: string = "...",
 ): string {
   if (url.length <= startLength + endLength) {
     return url;
@@ -73,23 +74,24 @@ export default function Redirect() {
   const txHash = searchParams.get("txHash");
   const paymentDetails = useMemo(
     () => JSON.parse(localStorage.getItem(LOCAL_STORAGE_PAYMENT_KEY) ?? ""),
-    []
+    [],
   );
+  const { address, token } = extractLocalStorageSettings();
   const { txDetails, isVerified, isLoading, error } = useVerify(
     chainId,
     txHash,
-    paymentDetails
+    paymentDetails,
   );
 
   const txUrl = constructUrl(txDetails?.chainId, txDetails?.txHash);
 
   const isMalformed = !chainId || !txHash || isNaN(chainId);
 
-  // const isInvalidAddress = txDetails?.receiver.toLowerCase() !==
-  //     (process.env.REACT_APP_YODL_ADDRESS ?? "").toLowerCase();
+  const isInvalidAddress =
+    txDetails?.receiver.toLowerCase() !== address.toLowerCase();
   const isInvalid =
-    txDetails?.tokenSymbol.toLowerCase() !==
-      (process.env.REACT_APP_ACCEPTED_SYMBOL ?? "").toLowerCase() ||
+    isInvalidAddress ||
+    txDetails?.tokenSymbol.toLowerCase() !== token.toLowerCase() ||
     txDetails?.memo !== paymentDetails?.memo ||
     !isVerified;
 

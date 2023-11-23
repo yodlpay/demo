@@ -11,6 +11,7 @@ import {
 import { Controller, FormProvider, useForm } from "react-hook-form";
 import { DEMO_TOKENS, LOCAL_STORAGE_SETTINGS_KEY } from "../constants";
 import { settingsSchema } from "../validation";
+import { extractLocalStorageSettings } from "../helpers";
 
 const useStyles = createStyles((theme) => ({
   modal: {
@@ -36,24 +37,11 @@ type SettingsProps = {
   handleClose: () => void;
 };
 
-const determineInitialValues = () => {
-  const formValues = localStorage.getItem(LOCAL_STORAGE_SETTINGS_KEY);
-  if (formValues) {
-    return JSON.parse(formValues);
-  }
-  return {
-    address: "0xDD641eFfd516e4fAdBAd782E78EF7D291c8221b1",
-    token: "USDC",
-    username: "demo",
-    apiKey: "58bc4fe2-ade3-4b81-b8c4-a5cc386cb3d1",
-  };
-};
-
 export const Settings = ({ opened, handleClose }: SettingsProps) => {
   const methods = useForm<FormState>({
     reValidateMode: "onChange",
     defaultValues: {
-      ...determineInitialValues(),
+      ...extractLocalStorageSettings(),
     } as FormState,
     resolver: zodResolver(settingsSchema),
   });
@@ -74,7 +62,7 @@ export const Settings = ({ opened, handleClose }: SettingsProps) => {
         token,
         username,
         apiKey,
-      })
+      }),
     );
     handleClose();
   };

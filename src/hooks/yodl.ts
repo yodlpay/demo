@@ -1,7 +1,7 @@
 import { PaymentDetails, TxDetails, VerifyResponse } from "../types";
 import { useEffect, useState } from "react";
 import { MAX_FETCH_TX_ATTEMPTS, TX_FETCH_INTERVAL } from "../constants";
-import { sleep } from "../helpers";
+import { extractLocalStorageSettings, sleep } from "../helpers";
 
 export const useVerify = (
   chainId: number | null,
@@ -16,13 +16,14 @@ export const useVerify = (
   useEffect(() => {
     const getTxDetails = async () => {
       try {
+        const { address, username, apiKey } = extractLocalStorageSettings();
         const payload = {
           chainId,
           txHash,
           amount: paymentDetails?.amount,
           currency: paymentDetails?.currency.toUpperCase(),
-          address: process.env.REACT_APP_YODL_ADDRESS ?? "",
-          handle: process.env.REACT_APP_YODL_USERNAME ?? "",
+          address: address,
+          handle: username,
         };
         let attempts = 0;
         let res;
@@ -32,7 +33,7 @@ export const useVerify = (
             method: "POST",
             headers: {
               "Content-Type": "application.json",
-              authorization: process.env.REACT_APP_YODL_API_KEY ?? "",
+              authorization: apiKey,
             },
             body: JSON.stringify(payload),
           });
