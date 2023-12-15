@@ -1,0 +1,24 @@
+# Build client
+FROM node:16 as client-build
+WORKDIR /usr/src/app
+COPY client/package*.json ./client/
+RUN npm install --legacy-peer-deps --prefix client
+COPY client/ ./client/
+RUN npm run build --prefix client
+
+# Build server
+FROM node:16 as server-build
+WORKDIR /usr/src/app
+COPY package*.json ./
+RUN npm install --legacy-peer-deps
+COPY . .
+# Copy built client files
+COPY --from=client-build /usr/src/app/client/build ./client/build
+RUN npm run build
+
+# Final image
+FROM node:16
+WORKDIR /usr/src/app
+COPY --from=server-build /usr/src/app .
+EXPOSE 5000
+CMD ["node", "dist/index.js"]

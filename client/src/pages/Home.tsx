@@ -20,8 +20,9 @@ import { v4 as uuidv4 } from "uuid";
 import { DEMO_CURRENCIES, LOCAL_STORAGE_PAYMENT_KEY } from "../constants";
 import { MOBILE_BREAKPOINT, theme } from "../styles/theme";
 import { demoTopupSchema } from "../validation";
-import { Settings } from "./Settings";
+import { Settings } from "../components/Settings";
 import { extractLocalStorageSettings } from "../helpers";
+import { useNavigate } from "react-router-dom";
 
 const useStyles = createStyles((theme) => ({
   container: {
@@ -83,7 +84,7 @@ const useStyles = createStyles((theme) => ({
   topUpButton: {
     background: `${theme.colors?.brand?.[0]} !important`,
   },
-  settingsButton: {
+  actionButton: {
     color: theme.colors?.primary?.[0],
     "&:hover": {
       background: theme.colors?.level?.[1],
@@ -99,6 +100,8 @@ type FormState = {
 
 export default function Home() {
   const [opened, setOpened] = useState(false);
+
+  const navigate = useNavigate();
 
   const methods = useForm<FormState>({
     reValidateMode: "onChange",
@@ -129,7 +132,7 @@ export default function Home() {
         memo,
         amount,
         currency,
-      }),
+      })
     );
     const searchParams = new URLSearchParams({
       memo,
@@ -150,13 +153,22 @@ export default function Home() {
         <Text c="primary.0" size={16} align="center">
           Boost your balance in seconds
         </Text>
-        <Button
-          variant="subtle"
-          onClick={() => setOpened(true)}
-          className={classes.settingsButton}
-        >
-          Settings
-        </Button>
+        <Flex direction="column" gap="8px">
+          <Button
+            variant="subtle"
+            onClick={() => navigate("/transactions")}
+            className={classes.actionButton}
+          >
+            Transactions
+          </Button>
+          <Button
+            variant="subtle"
+            onClick={() => setOpened(true)}
+            className={classes.actionButton}
+          >
+            Settings
+          </Button>
+        </Flex>
       </Flex>
       <FormProvider {...methods}>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -176,7 +188,7 @@ export default function Home() {
                       !Number.isNaN(parseFloat(value as string))
                         ? `${value}`.replace(
                             /\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g,
-                            ",",
+                            ","
                           )
                         : ""
                     }
@@ -184,7 +196,7 @@ export default function Home() {
                     label="Top-up amount"
                     icon={
                       DEMO_CURRENCIES.find(
-                        (item) => item.value === values.currency,
+                        (item) => item.value === values.currency
                       )?.icon
                     }
                     error={error}
