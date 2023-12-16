@@ -24,6 +24,6 @@ jobs:
           access_token: ${{ secrets.FLY_API_TOKEN }}
 
       - name: Build and Deploy to Fly.io
-        run: flyctl deploy --remote-only
+        run: flyctl deploy --remote-only --app="yodl-demo"
         env:
           FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
