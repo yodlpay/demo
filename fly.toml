@@ -1,4 +1,4 @@
-app = "demo"
+app = "yodl-demo"
 
 [build]
 dockerfile = "Dockerfile.prod"
@@ -14,6 +14,10 @@ protocol = "tcp"
   [[services.ports]]
   handlers = ["http"]
   port = 80
+
+  [[services.ports]]
+  handlers = ["tls"]
+  port = 443
 
   [[services.tcp_checks]]
   interval = 10000
