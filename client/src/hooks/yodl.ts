@@ -1,12 +1,12 @@
-import { PaymentDetails, TxDetails, VerifyResponse } from "../types";
 import { useEffect, useState } from "react";
 import { MAX_FETCH_TX_ATTEMPTS, TX_FETCH_INTERVAL } from "../constants";
 import { extractLocalStorageSettings, sleep } from "../helpers";
+import { PaymentDetails, TxDetails, VerifyResponse } from "../types";
 
 export const useVerify = (
   chainId: number | null,
   txHash: string | null,
-  paymentDetails: PaymentDetails | null,
+  paymentDetails: PaymentDetails | null
 ) => {
   const [txDetails, setTxDetails] = useState<TxDetails | null>(null);
   const [isVerified, setIsVerified] = useState<boolean>(false);

@@ -1,0 +1,23 @@
+name: Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Fly.io CLI
+        uses: superfly/flyctl-actions/setup-flyctl@master
+        with:
+          access_token: ${{ secrets.FLY_API_TOKEN }}
+
+      - name: Build and Deploy to Fly.io
+        run: flyctl deploy --remote-only --app="yodl-demo"
+        env:
+          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
